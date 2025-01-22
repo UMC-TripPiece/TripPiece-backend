@@ -2,13 +2,13 @@ package umc.TripPiece.web.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import java.util.List;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 public class TravelRequestDto {
 
@@ -25,7 +25,17 @@ public class TravelRequestDto {
     }
 
     @Getter
+    @Builder
     public static class MemoDto {
+
+        @NotBlank
+        String description;
+    }
+
+    @Getter
+    public static class EmojiDto {
+        @Size(min = 4, max = 4)
+        List<String> emojis;
 
         @NotBlank
         String description;
