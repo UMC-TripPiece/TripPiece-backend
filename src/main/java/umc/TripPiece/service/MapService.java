@@ -54,7 +54,7 @@ public class MapService {
         City city = cityRepository.findById(requestDto.getCityId())
                 .orElseThrow(() -> new IllegalArgumentException("City not found with id: " + requestDto.getCityId()));
 
-        Map map = MapConverter.toMap(requestDto, city);
+        Map map = MapConverter.toMap(requestDto, city, userId);
         Map savedMap = mapRepository.save(map);
         return MapConverter.toMapResponseDto(savedMap);
     }
