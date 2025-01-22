@@ -11,9 +11,6 @@ import umc.TripPiece.domain.enums.Color;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MapRequestDto {
-
-    private Long userId;
-
     @NotBlank
     private String countryCode;
 
