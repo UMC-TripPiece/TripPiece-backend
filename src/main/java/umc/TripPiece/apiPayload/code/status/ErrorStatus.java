@@ -63,6 +63,7 @@ public enum ErrorStatus implements BaseErrorCode {
     VERIFICATION_CODE_MISMATCH(HttpStatus.BAD_REQUEST, "EMAIL400", "인증번호가 일치하지 않습니다."),
     INVALID_INPUT(HttpStatus.BAD_REQUEST, "EMAIL400", "입력값이 유효하지 않습니다."),
     VERIFICATION_CODE_NOT_SENT(HttpStatus.NOT_FOUND, "EMAIL404", "인증코드가 발송되지 않은 이메일입니다."),
+    DUPLICATION_EMAIL(HttpStatus.BAD_REQUEST, "EMAIL409", "이미 존재하는 중복된 이메일입니다."),
     EMAIL_SEND_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "EMAIL500", "이메일 전송에 실패했습니다."),
     EMAIL_TEMPLATE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "EMAIL500", "이메일 템플릿을 읽는 중 오류가 발생했습니다."),
 

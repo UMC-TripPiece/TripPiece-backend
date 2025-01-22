@@ -10,6 +10,7 @@ import umc.TripPiece.apiPayload.code.status.ErrorStatus;
 import umc.TripPiece.apiPayload.exception.handler.UserHandler;
 import umc.TripPiece.domain.VerificationCode;
 import umc.TripPiece.apiPayload.ApiResponse;
+import umc.TripPiece.repository.UserRepository;
 import umc.TripPiece.repository.VerificationCodeRepository;
 import umc.TripPiece.service.EmailService;
 import umc.TripPiece.web.dto.request.EmailRequestDto;
@@ -22,12 +23,19 @@ public class EmailController {
 
     private final EmailService emailService;
     private final VerificationCodeRepository verificationCodeRepository;
+    private final UserRepository userRepository;
 
     @PostMapping("/send")
     @Operation(summary = "이메일 인증번호 전송 API",
             description = "이메일로 6자리 인증번호 발송")
     public ResponseEntity<ApiResponse<String>> sendVerificationCode(@RequestBody @Valid EmailRequestDto.SendCodeDto request) {
         String email = request.getEmail();
+
+        // 중복된 이메일일 경우
+        if (userRepository.existsByEmail(email)) {
+            throw new UserHandler(ErrorStatus.DUPLICATION_EMAIL);
+        }
+
         String code = emailService.generateVerificationCode();
 
         VerificationCode verificationCode = new VerificationCode(email, code, 3); // 인증코드 유효시간 (3분)
