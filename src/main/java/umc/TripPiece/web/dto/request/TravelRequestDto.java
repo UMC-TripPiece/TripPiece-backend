@@ -25,7 +25,6 @@ public class TravelRequestDto {
     }
 
     @Getter
-    @Builder
     public static class MemoDto {
 
         @NotBlank

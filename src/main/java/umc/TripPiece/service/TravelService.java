@@ -131,11 +131,11 @@ public class TravelService {
             }
         }
 
-        MemoDto memoDto = MemoDto.builder()
-                .description(request.getDescription())
-                .build();
 
-        TripPiece newTripPiece = TravelConverter.toTripPieceMemo(memoDto, user);
+        TripPiece newTripPiece = TripPiece.builder()
+                .description(request.getDescription())
+                .user(user)
+                .build();
 
         // 이모지 생성
         for (String emoji : emojis) {
