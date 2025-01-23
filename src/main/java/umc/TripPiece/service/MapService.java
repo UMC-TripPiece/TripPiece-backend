@@ -12,6 +12,7 @@ import umc.TripPiece.domain.User;
 import umc.TripPiece.domain.enums.Color;
 import umc.TripPiece.domain.jwt.JWTUtil;
 import umc.TripPiece.repository.*;
+import umc.TripPiece.security.SecurityUtils;
 import umc.TripPiece.web.dto.request.MapRequestDto;
 import umc.TripPiece.web.dto.response.MapResponseDto;
 import umc.TripPiece.web.dto.response.MapStatsResponseDto;
@@ -32,7 +33,9 @@ public class MapService {
     private final UserRepository userRepository;
     private final CountryRepository countryRepository;
 
-    public List<MapResponseDto> getMapsByUserId(Long userId) {
+    public List<MapResponseDto> getUserMaps() {
+        Long userId = SecurityUtils.getCurrentUserId();
+
         return mapRepository.findByUserId(userId).stream()
                 .map(MapConverter::toMapResponseDto)
                 .collect(Collectors.toList());
@@ -40,8 +43,10 @@ public class MapService {
 
     @Transactional
     public MapResponseDto createMapWithCity(MapRequestDto requestDto) {
+        Long userId = SecurityUtils.getCurrentUserId();
+
         mapRepository.findByUserIdAndCountryCodeAndCityId(
-                        requestDto.getUserId(), requestDto.getCountryCode(), requestDto.getCityId())
+                        userId, requestDto.getCountryCode(), requestDto.getCityId())
                 .ifPresent(existingMap -> {
                     throw new IllegalArgumentException("이미 색칠된 도시입니다.");
                 });
@@ -49,7 +54,7 @@ public class MapService {
         City city = cityRepository.findById(requestDto.getCityId())
                 .orElseThrow(() -> new IllegalArgumentException("City not found with id: " + requestDto.getCityId()));
 
-        Map map = MapConverter.toMap(requestDto, city);
+        Map map = MapConverter.toMap(requestDto, city, userId);
         Map savedMap = mapRepository.save(map);
         return MapConverter.toMapResponseDto(savedMap);
     }
@@ -65,7 +70,9 @@ public class MapService {
     }
 
     @Transactional
-    public MapResponseDto updateMapColorWithInfo(Long userId, String countryCode, Long cityId, String newColor) {
+    public MapResponseDto updateMapColorWithInfo(String countryCode, Long cityId, String newColor) {
+        Long userId = SecurityUtils.getCurrentUserId();
+
         Map map = mapRepository.findByUserIdAndCountryCodeAndCityId(userId, countryCode, cityId)
                 .orElseThrow(() -> new IllegalArgumentException("Map not found with provided info."));
 
@@ -84,7 +91,9 @@ public class MapService {
     }
 
     @Transactional
-    public void deleteMapWithInfo(Long userId, String countryCode, Long cityId) {
+    public void deleteMapWithInfo(String countryCode, Long cityId) {
+        Long userId = SecurityUtils.getCurrentUserId();
+
         List<Map> maps = mapRepository.findAllByUserIdAndCountryCodeAndCityId(userId, countryCode, cityId);
         if (maps.isEmpty()) {
             throw new IllegalArgumentException("해당 정보로 등록된 맵이 없습니다.");
@@ -103,7 +112,9 @@ public class MapService {
         return MapConverter.toMapResponseDto(updatedMap);
     }
 
-    public MapStatsResponseDto getMapStatsByUserId(Long userId) {
+    public MapStatsResponseDto getUserMapStats() {
+        Long userId = SecurityUtils.getCurrentUserId();
+
         long countryCount = mapRepository.countDistinctCountryCodeByUserId(userId);
         long cityCount = mapRepository.countDistinctCityByUserId(userId);
 
@@ -131,7 +142,9 @@ public class MapService {
         return mapRepository.countDistinctCountryCodeByUserId(userId);
     }
 
-    public MapStatsResponseDto getVisitedCountriesWithProfile(Long userId) {
+    public MapStatsResponseDto getVisitedCountriesWithProfile() {
+        Long userId = SecurityUtils.getCurrentUserId();
+
         List<String> visitedCountries = getVisitedCountries(userId);
         long visitedCountryCount = getVisitedCountryCount(userId);
 
@@ -172,8 +185,9 @@ public class MapService {
         return results;
     }
 
-    public List<MapResponseDto.getMarkerResponse> getMarkers(String token) {
-        Long userId = jwtUtil.getUserIdFromToken(token);
+    public List<MapResponseDto.getMarkerResponse> getUserMarkers() {
+        Long userId = SecurityUtils.getCurrentUserId();
+
         List<Map> maps = mapRepository.findByUserId(userId);
 
         return maps.stream()

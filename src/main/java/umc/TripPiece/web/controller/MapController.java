@@ -33,12 +33,11 @@ import java.util.List;
 public class MapController {
 
     private final MapService mapService;
-    private final JWTUtil jwtUtil; // JWTUtil 객체 주입
 
-    @GetMapping("/{userId}")
+    @GetMapping
     @Operation(summary = "유저별 맵 불러오기 API", description = "유저별 맵 리스트 반환")
-    public ApiResponse<List<MapResponseDto>> getMapsByUserId(@PathVariable(name = "userId") @ExistEntity(entityType = umc.TripPiece.domain.User.class) Long userId) {
-        List<MapResponseDto> maps = mapService.getMapsByUserId(userId);
+    public ApiResponse<List<MapResponseDto>> getMaps() {
+        List<MapResponseDto> maps = mapService.getUserMaps();
         return ApiResponse.onSuccess(maps);
     }
 
@@ -49,18 +48,17 @@ public class MapController {
         return ApiResponse.onSuccess(mapResponseDto);
     }
 
-    @GetMapping("/stats/{userId}")
+    @GetMapping("/stats")
     @Operation(summary = "유저별 맵 통계 API", description = "유저별 방문한 나라와 도시 수 반환")
-    public ApiResponse<MapStatsResponseDto> getMapStatsByUserId(@PathVariable(name = "userId") Long userId) {
-        MapStatsResponseDto stats = mapService.getMapStatsByUserId(userId);
+    public ApiResponse<MapStatsResponseDto> getMapStats() {
+        MapStatsResponseDto stats = mapService.getUserMapStats();
         return ApiResponse.onSuccess(stats);
     }
 
     @GetMapping("/markers")
     @Operation(summary = "구글 지도 위 마커 반환 API", description = "나의 기록탭의 마커 반환")
-    public ApiResponse<List<MapResponseDto.getMarkerResponse>> getMarkers(@RequestHeader("Authorization") String token) {
-        String tokenWithoutBearer = token.substring(7);
-        List<MapResponseDto.getMarkerResponse> markers = mapService.getMarkers(tokenWithoutBearer);
+    public ApiResponse<List<MapResponseDto.getMarkerResponse>> getMarkers() {
+        List<MapResponseDto.getMarkerResponse> markers = mapService.getUserMarkers();
         return ApiResponse.onSuccess(markers);
     }
 
@@ -86,28 +84,23 @@ public class MapController {
     }
 
     @PutMapping("/color")
-    @Operation(summary = "맵 색상 수정 (기존 정보 기반)", description = "맵의 색상을 수정 (userId, countryCode, cityId 기반)")
-    public ApiResponse<MapResponseDto> updateMapColorWithInfo(@RequestHeader("Authorization") String token,
-                                                              @RequestBody @Valid MapRequestDto requestDto) {
-        Long userId = jwtUtil.getUserIdFromToken(token.substring(7));
-        MapResponseDto updatedMap = mapService.updateMapColorWithInfo(userId, requestDto.getCountryCode(), requestDto.getCityId(), requestDto.getColor());
+    @Operation(summary = "맵 색상 수정 (기존 정보 기반)", description = "맵의 색상을 수정 ( countryCode, cityId 기반)")
+    public ApiResponse<MapResponseDto> updateMapColorWithInfo(@RequestBody @Valid MapRequestDto requestDto) {
+        MapResponseDto updatedMap = mapService.updateMapColorWithInfo(requestDto.getCountryCode(), requestDto.getCityId(), requestDto.getColor());
         return ApiResponse.onSuccess(updatedMap);
     }
 
     @DeleteMapping("/color")
-    @Operation(summary = "맵 삭제 (기존 정보 기반)", description = "맵을 삭제 (userId, countryCode, cityId 기반)")
-    public ApiResponse<Void> deleteMapWithInfo(@RequestHeader("Authorization") String token,
-                                               @RequestBody @Valid MapRequestDto requestDto) {
-        Long userId = jwtUtil.getUserIdFromToken(token.substring(7));
-        mapService.deleteMapWithInfo(userId, requestDto.getCountryCode(), requestDto.getCityId());
+    @Operation(summary = "맵 삭제 (기존 정보 기반)", description = "맵을 삭제 (countryCode, cityId 기반)")
+    public ApiResponse<Void> deleteMapWithInfo(@RequestBody @Valid MapRequestDto requestDto) {
+        mapService.deleteMapWithInfo(requestDto.getCountryCode(), requestDto.getCityId());
         return ApiResponse.onSuccess(null);
     }
 
     @GetMapping("/visited-countries")
     @Operation(summary = "방문한 나라 누적 API", description = "사용자가 방문한 나라의 리스트와 카운트를 반환")
-    public ApiResponse<MapStatsResponseDto> getVisitedCountries(@RequestHeader("Authorization") String token) {
-        Long userId = jwtUtil.getUserIdFromToken(token.substring(7));
-        MapStatsResponseDto response = mapService.getVisitedCountriesWithProfile(userId);
+    public ApiResponse<MapStatsResponseDto> getVisitedCountries() {
+        MapStatsResponseDto response = mapService.getVisitedCountriesWithProfile();
         return ApiResponse.onSuccess(response);
     }
 
