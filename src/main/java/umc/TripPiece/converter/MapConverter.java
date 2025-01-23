@@ -11,10 +11,10 @@ import java.util.Collections;
 public class MapConverter {
 
     // MapRequestDto -> Map 변환
-    public static Map toMap(MapRequestDto requestDto, City city) {
+    public static Map toMap(MapRequestDto requestDto, City city, Long userId) {
         return new Map(
                 null,
-                requestDto.getUserId(),
+                userId,
                 requestDto.getCountryCode(),
                 requestDto.getColor(), // String 값 그대로 설정
                 Collections.emptyList(),

@@ -261,14 +261,16 @@ public class TripPieceService {
         // 사진 삭제
         List<Picture> pictures = pictureRepository.findByTripPieceId(id);
         pictureRepository.deleteAll(pictures);
+        pictures.forEach(picture -> s3Manager.deleteFile(picture.getPictureUrl()));
 
         // 영상 삭제
         List<Video> videos = videoRepository.findByTripPieceId(id);
         videoRepository.deleteAll(videos);
+        videos.forEach(video -> s3Manager.deleteFile(video.getVideoUrl()));
 
         // 여행 조각 삭제
         TripPiece tripPiece = tripPieceRepository.findById(id)
-                        .orElseThrow(() -> new NotFoundHandler(ErrorStatus.NOT_FOUND_TRIPPIECE));
+                .orElseThrow(() -> new NotFoundHandler(ErrorStatus.NOT_FOUND_TRIPPIECE));
 
         tripPieceRepository.delete(tripPiece);
     }
@@ -294,7 +296,7 @@ public class TripPieceService {
 
         // 원래 여행조각의 타입이 PICTURE 또는 SELFIE 인지 검사
         if (tripPiece.getCategory() != Category.PICTURE
-            && tripPiece.getCategory() != Category.SELFIE)
+                && tripPiece.getCategory() != Category.SELFIE)
             throw new BadRequestHandler(ErrorStatus.INVALID_TRIPPIECE_CATEGORY);
 
         // 기존에 저장되어있던  사진들은 모두 삭제
@@ -309,7 +311,7 @@ public class TripPieceService {
         for(int i = 0; i < pictureNum; i++) {
             String uuid = UUID.randomUUID().toString();
             Uuid savedUuid = uuidRepository.save(Uuid.builder()
-                .uuid(uuid).build());
+                    .uuid(uuid).build());
             uuids.add(savedUuid);
         }
 
@@ -336,7 +338,7 @@ public class TripPieceService {
 
         // 원래 여행조각의 타입이 VIDEO 또는 WHERE 인지 검사
         if (tripPiece.getCategory() != Category.VIDEO
-            && tripPiece.getCategory() != Category.WHERE)
+                && tripPiece.getCategory() != Category.WHERE)
             throw new BadRequestHandler(ErrorStatus.INVALID_TRIPPIECE_CATEGORY);
 
         // 기존에 저장되어있던 비디오들은 모두 삭제
@@ -348,7 +350,7 @@ public class TripPieceService {
 
         String uuid = UUID.randomUUID().toString();
         Uuid savedUuid = uuidRepository.save(Uuid.builder()
-            .uuid(uuid).build());
+                .uuid(uuid).build());
 
         String videoUrl = s3Manager.uploadFile(s3Manager.generateTripPieceKeyName(savedUuid), file, Category.VIDEO);
 

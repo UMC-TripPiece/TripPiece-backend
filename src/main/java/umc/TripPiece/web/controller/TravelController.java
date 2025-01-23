@@ -4,29 +4,21 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import umc.TripPiece.apiPayload.code.status.ErrorStatus;
-import umc.TripPiece.apiPayload.exception.GeneralException;
 import umc.TripPiece.apiPayload.exception.handler.BadRequestHandler;
 import umc.TripPiece.converter.TravelConverter;
-import umc.TripPiece.domain.Travel;
 import umc.TripPiece.domain.TripPiece;
-import umc.TripPiece.domain.enums.TravelStatus;
 import umc.TripPiece.apiPayload.ApiResponse;
 import umc.TripPiece.repository.TravelRepository;
 import umc.TripPiece.service.TravelService;
 import umc.TripPiece.validation.annotation.ExistEntity;
-import umc.TripPiece.validation.annotation.ValidateToken;
 import umc.TripPiece.web.dto.request.TravelRequestDto;
 import umc.TripPiece.web.dto.response.TravelResponseDto;
 
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Tag(name = "Travel", description = "여행기 관련 API")
 @RestController
@@ -75,12 +67,11 @@ public class TravelController {
     @PostMapping("/mytravels/emoji/{travelId}")
     @Operation(summary = "이모지 기록 API", description = "특정 여행기에서의 여행조각 추가")
     public ApiResponse<TravelResponseDto.CreateTripPieceResultDto> createTripPieceEmoji(
-            @RequestBody TravelRequestDto.MemoDto request,
+            @RequestBody TravelRequestDto.EmojiDto request,
             @ExistEntity(entityType = umc.TripPiece.domain.Travel.class)
-            @PathVariable("travelId") Long travelId,
-            @RequestParam(name = "emojis") List<String> emojis){
+            @PathVariable("travelId") Long travelId){
 
-        TripPiece tripPiece = travelService.createEmoji(travelId, emojis, request);
+        TripPiece tripPiece = travelService.createEmoji(travelId, request);
         return ApiResponse.onSuccess(TravelConverter.toCreateTripPieceResultDto(tripPiece));
     }
 

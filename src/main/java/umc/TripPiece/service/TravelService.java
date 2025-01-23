@@ -44,6 +44,8 @@ import umc.TripPiece.repository.UuidRepository;
 import umc.TripPiece.repository.VideoRepository;
 import umc.TripPiece.security.SecurityUtils;
 import umc.TripPiece.web.dto.request.TravelRequestDto;
+import umc.TripPiece.web.dto.request.TravelRequestDto.EmojiDto;
+import umc.TripPiece.web.dto.request.TravelRequestDto.MemoDto;
 import umc.TripPiece.web.dto.response.TravelResponseDto;
 
 @Service
@@ -94,13 +96,15 @@ public class TravelService {
     }
 
     @Transactional
-    public TripPiece createEmoji(Long travelId, List<String> emojis, TravelRequestDto.MemoDto request) {
+    public TripPiece createEmoji(Long travelId, EmojiDto request) {
         Long userId = SecurityUtils.getCurrentUserId();
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundHandler(ErrorStatus.NOT_FOUND_USER));
 
         Travel travel = travelRepository.findById(travelId)
                 .orElseThrow(() -> new NotFoundHandler(ErrorStatus.NOT_FOUND_TRAVEL));
+
+        List<String> emojis = request.getEmojis();
 
         // 메모 검증
         if (request.getDescription().length() > 100) {
@@ -127,7 +131,11 @@ public class TravelService {
             }
         }
 
-        TripPiece newTripPiece = TravelConverter.toTripPieceMemo(request, user);
+
+        TripPiece newTripPiece = TripPiece.builder()
+                .description(request.getDescription())
+                .user(user)
+                .build();
 
         // 이모지 생성
         for (String emoji : emojis) {
