@@ -90,6 +90,7 @@ public class TripPieceService {
             tripPieceListDto.setCreatedAt(tripPiece.getCreatedAt());
             tripPieceListDto.setCountryName(country.getName());
             tripPieceListDto.setCityName(city.getName());
+            tripPieceListDto.setMemo(tripPiece.getDescription());
 
             tripPieceList.add(tripPieceListDto);
         }
@@ -132,6 +133,7 @@ public class TripPieceService {
             tripPieceListDto.setCreatedAt(tripPiece.getCreatedAt());
             tripPieceListDto.setCountryName(country.getName());
             tripPieceListDto.setCityName(city.getName());
+            tripPieceListDto.setMemo(tripPiece.getDescription());
 
             tripPieceList.add(tripPieceListDto);
         }
@@ -168,6 +170,7 @@ public class TripPieceService {
             tripPieceListDto.setCreatedAt(tripPiece.getCreatedAt());
             tripPieceListDto.setCountryName(country.getName());
             tripPieceListDto.setCityName(city.getName());
+            tripPieceListDto.setMemo(tripPiece.getDescription());
 
             tripPieceList.add(tripPieceListDto);
         }
@@ -202,6 +205,7 @@ public class TripPieceService {
             tripPieceListDto.setCreatedAt(tripPiece.getCreatedAt());
             tripPieceListDto.setCountryName(country.getName());
             tripPieceListDto.setCityName(city.getName());
+            tripPieceListDto.setMemo(tripPiece.getDescription());
 
             tripPieceList.add(tripPieceListDto);
         }
