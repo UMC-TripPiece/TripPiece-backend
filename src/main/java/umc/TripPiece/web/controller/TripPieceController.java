@@ -37,9 +37,6 @@ public class TripPieceController {
 
         List<TripPieceResponseDto.TripPieceListDto> tripPieceList = tripPieceService.getTripPieceList(sort);
 
-        if (tripPieceList == null || tripPieceList.isEmpty()) {
-            throw new NotFoundHandler(ErrorStatus.NOT_FOUND_TRIPPIECE);
-        }
         return ApiResponse.onSuccess(tripPieceList);
     }
 
@@ -53,8 +50,6 @@ public class TripPieceController {
 
         List<TripPieceResponseDto.TripPieceListDto> tripPieceList = tripPieceService.getMemoList(sort);
 
-        if (tripPieceList == null || tripPieceList.isEmpty())
-            throw new NotFoundHandler(ErrorStatus.NOT_FOUND_TRIPPIECE);
         return ApiResponse.onSuccess(tripPieceList);
     }
 
@@ -68,8 +63,6 @@ public class TripPieceController {
 
         List<TripPieceResponseDto.TripPieceListDto> tripPieceList = tripPieceService.getPictureList(sort);
 
-        if (tripPieceList == null || tripPieceList.isEmpty())
-            throw new NotFoundHandler(ErrorStatus.NOT_FOUND_TRIPPIECE);
         return ApiResponse.onSuccess(tripPieceList);
     }
 
@@ -83,8 +76,6 @@ public class TripPieceController {
 
         List<TripPieceResponseDto.TripPieceListDto> tripPieceList = tripPieceService.getVideoList(sort);
 
-        if (tripPieceList == null || tripPieceList.isEmpty())
-            throw new NotFoundHandler(ErrorStatus.NOT_FOUND_TRIPPIECE);
         return ApiResponse.onSuccess(tripPieceList);
     }
 
@@ -94,8 +85,7 @@ public class TripPieceController {
             @ExistEntity(entityType = TripPiece.class)
             @PathVariable("tripPieceId") Long tripPieceId){
         TripPieceResponseDto.getTripPieceDto response = tripPieceService.getTripPiece(tripPieceId);
-        if (response == null)
-            throw new NotFoundHandler(ErrorStatus.NOT_FOUND_TRIPPIECE);
+
         return ApiResponse.onSuccess(response);
     }
 
