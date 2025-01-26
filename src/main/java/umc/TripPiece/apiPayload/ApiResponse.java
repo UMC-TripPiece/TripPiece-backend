@@ -27,8 +27,9 @@ public class ApiResponse<T> {
         return new ApiResponse<>(true, SuccessStatus._OK.getCode() , SuccessStatus._OK.getMessage(), result);
     }
 
-    public static <T> ApiResponse<T> of(BaseCode code, T result){
-            return new ApiResponse<>(true, code.getReasonHttpStatus().getCode() , code.getReasonHttpStatus().getMessage(), result);
+    // 실패이지만, 성공 응답 반환 필요할 때
+    public static <T> ApiResponse<T> of(String code, String message) {
+        return new ApiResponse<>(true, code, message, null);
     }
 
 

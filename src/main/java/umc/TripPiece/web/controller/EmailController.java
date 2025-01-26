@@ -33,7 +33,7 @@ public class EmailController {
 
         // 중복된 이메일일 경우
         if (userRepository.existsByEmail(email)) {
-            throw new UserHandler(ErrorStatus.DUPLICATION_EMAIL);
+            return ResponseEntity.ok(ApiResponse.of(ErrorStatus.DUPLICATION_EMAIL.getCode(), "이미 등록된 이메일입니다."));
         }
 
         String code = emailService.generateVerificationCode();
