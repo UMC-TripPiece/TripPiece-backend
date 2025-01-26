@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import umc.TripPiece.apiPayload.code.BaseCode;
+import umc.TripPiece.apiPayload.code.BaseErrorCode;
 import umc.TripPiece.apiPayload.code.status.SuccessStatus;
 
 @Getter
@@ -27,8 +28,9 @@ public class ApiResponse<T> {
         return new ApiResponse<>(true, SuccessStatus._OK.getCode() , SuccessStatus._OK.getMessage(), result);
     }
 
-    public static <T> ApiResponse<T> of(BaseCode code, T result){
-            return new ApiResponse<>(true, code.getReasonHttpStatus().getCode() , code.getReasonHttpStatus().getMessage(), result);
+    // 실패이지만, 성공 응답 반환 필요할 때
+    public static <T> ApiResponse<T> of(BaseErrorCode code) {
+        return new ApiResponse<>(true, code.getReason().getCode()+"", code.getReason().getMessage()+"", null);
     }
 
 
