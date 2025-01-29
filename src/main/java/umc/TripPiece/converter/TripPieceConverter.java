@@ -18,6 +18,8 @@ public class TripPieceConverter {
         return Picture.builder()
                 .pictureUrl(pictureUrl)
                 .tripPiece(tripPiece)
+                .travel_thumbnail(false)
+                .thumbnail_index(0)
                 .build();
     }
 
