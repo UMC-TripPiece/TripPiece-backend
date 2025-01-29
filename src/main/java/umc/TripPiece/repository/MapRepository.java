@@ -9,8 +9,9 @@ import java.util.Optional;
 
 public interface MapRepository extends JpaRepository<Map, Long> {
 
-    // 유저 ID로 맵을 조회하는 메소드
-    List<Map> findByUserId(Long userId);
+    // 유저 ID로 맵을 조회하는 메소드 (저장된 시간 순서로 정렬)
+    @Query("SELECT m FROM Map m WHERE m.userId = :userId ORDER BY m.countryCode ASC, m.createdAt DESC")
+    List<Map> findByUserIdOrderedByCreatedAt(Long userId);
 
     // 유저가 방문한 나라 수를 조회하는 메소드
     @Query("SELECT COUNT(DISTINCT m.countryCode) FROM Map m WHERE m.userId = :userId")
@@ -37,5 +38,6 @@ public interface MapRepository extends JpaRepository<Map, Long> {
     List<Map> findAllByUserIdAndCountryCodeAndCityId(Long userId, String countryCode, Long cityId);
 
     // 유저 ID와 국가 코드로 맵을 조회하는 메소드 (마커 반환을 위한 사용)
-    Map findByCountryCodeAndUserId(String countryCode, Long userId);
+    @Query("SELECT m FROM Map m WHERE m.countryCode = :countryCode AND m.userId = :userId ORDER BY m.createdAt DESC")
+    List<Map> findByCountryCodeAndUserIdOrderedByCreatedAt(String countryCode, Long userId);
 }

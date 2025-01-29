@@ -29,14 +29,13 @@ public class MapService {
 
     private final MapRepository mapRepository;
     private final CityRepository cityRepository;
-    private final JWTUtil jwtUtil;
     private final UserRepository userRepository;
     private final CountryRepository countryRepository;
 
     public List<MapResponseDto> getUserMaps() {
         Long userId = SecurityUtils.getCurrentUserId();
 
-        return mapRepository.findByUserId(userId).stream()
+        return mapRepository.findByUserIdOrderedByCreatedAt(userId).stream()
                 .map(MapConverter::toMapResponseDto)
                 .collect(Collectors.toList());
     }
@@ -110,6 +109,12 @@ public class MapService {
         map.setColors(colorStrings);
         Map updatedMap = mapRepository.save(map);
         return MapConverter.toMapResponseDto(updatedMap);
+    }
+
+    public List<MapResponseDto> getMapsByUserId(Long userId) {
+        return mapRepository.findByUserIdOrderedByCreatedAt(userId).stream()
+                .map(MapConverter::toMapResponseDto)
+                .collect(Collectors.toList());
     }
 
     public MapStatsResponseDto getUserMapStats() {
@@ -188,7 +193,7 @@ public class MapService {
     public List<MapResponseDto.getMarkerResponse> getUserMarkers() {
         Long userId = SecurityUtils.getCurrentUserId();
 
-        List<Map> maps = mapRepository.findByUserId(userId);
+        List<Map> maps = mapRepository.findByUserIdOrderedByCreatedAt(userId);
 
         return maps.stream()
                 .map(map -> MapConverter.toMarkerResponseDto(
