@@ -168,7 +168,7 @@ public class MapService {
 
     public List<MapResponseDto.searchDto> searchCitiesCountry(String keyword) {
         if (keyword == null || keyword.trim().isEmpty()) {
-            return new ArrayList<>();
+            return Collections.emptyList();
         }
 
         List<City> cities = cityRepository.findByNameIgnoreCase(keyword);
