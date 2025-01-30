@@ -64,8 +64,7 @@ public class MapService {
                 .orElseThrow(() -> new IllegalArgumentException("Map not found with id: " + mapId));
 
         map.setColor(newColor);
-        Map updatedMap = mapRepository.save(map);
-        return MapConverter.toMapResponseDto(updatedMap);
+        return MapConverter.toMapResponseDto(mapRepository.save(map));
     }
 
     @Transactional
@@ -76,8 +75,7 @@ public class MapService {
                 .orElseThrow(() -> new IllegalArgumentException("Map not found with provided info."));
 
         map.setColor(newColor);
-        Map updatedMap = mapRepository.save(map);
-        return MapConverter.toMapResponseDto(updatedMap);
+        return MapConverter.toMapResponseDto(mapRepository.save(map));
     }
 
     @Transactional
@@ -107,8 +105,7 @@ public class MapService {
                 .orElseThrow(() -> new IllegalArgumentException("Map not found with id: " + mapId));
 
         map.setColors(colorStrings);
-        Map updatedMap = mapRepository.save(map);
-        return MapConverter.toMapResponseDto(updatedMap);
+        return MapConverter.toMapResponseDto(mapRepository.save(map));
     }
 
     public List<MapResponseDto> getMapsByUserId(Long userId) {
@@ -174,28 +171,15 @@ public class MapService {
         List<City> cities = cityRepository.findByNameIgnoreCase(keyword);
         List<Country> countries = countryRepository.findByNameIgnoreCase(keyword);
 
-        List<MapResponseDto.searchDto> results = new ArrayList<>();
-
-        if (!cities.isEmpty()) {
-            results.addAll(cities.stream().map(MapConverter::toSearchDto).collect(Collectors.toList()));
-        }
-
-        if (!countries.isEmpty()) {
-            for (Country country : countries) {
-                List<City> citiesInCountry = cityRepository.findByCountryId(country.getId());
-                results.addAll(citiesInCountry.stream().map(MapConverter::toSearchDto).collect(Collectors.toList()));
-            }
-        }
-
-        return results;
+        return cities.stream()
+                .map(MapConverter::toSearchDto)
+                .collect(Collectors.toList());
     }
 
     public List<MapResponseDto.getMarkerResponse> getUserMarkers() {
         Long userId = SecurityUtils.getCurrentUserId();
 
-        List<Map> maps = mapRepository.findByUserIdOrderedByCreatedAt(userId);
-
-        return maps.stream()
+        return mapRepository.findByUserIdOrderedByCreatedAt(userId).stream()
                 .map(map -> MapConverter.toMarkerResponseDto(
                         map,
                         "",

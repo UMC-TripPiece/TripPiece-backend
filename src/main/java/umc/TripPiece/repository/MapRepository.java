@@ -10,7 +10,7 @@ import java.util.Optional;
 public interface MapRepository extends JpaRepository<Map, Long> {
 
     // 유저 ID로 맵을 조회하는 메소드 (저장된 시간 순서로 정렬 - 최신 데이터가 리스트 마지막에 위치)
-    @Query("SELECT m FROM Map m WHERE m.userId = :userId ORDER BY m.countryCode ASC, m.createdAt ASC")
+    @Query("SELECT m FROM Map m WHERE m.userId = :userId ORDER BY m.countryCode ASC, m.createdAt DESC")
     List<Map> findByUserIdOrderedByCreatedAt(Long userId);
 
     // 유저가 방문한 나라 수를 조회하는 메소드
@@ -37,7 +37,7 @@ public interface MapRepository extends JpaRepository<Map, Long> {
     @Query("SELECT m FROM Map m WHERE m.userId = :userId AND m.countryCode = :countryCode AND m.city.id = :cityId")
     List<Map> findAllByUserIdAndCountryCodeAndCityId(Long userId, String countryCode, Long cityId);
 
-    // 특정 국가에서 유저가 색칠한 도시를 정렬된 순서로 조회 (최신이 마지막에 위치)
-    @Query("SELECT m FROM Map m WHERE m.countryCode = :countryCode AND m.userId = :userId ORDER BY m.createdAt ASC")
+    // 특정 국가에서 유저가 색칠한 도시를 정렬된 순서로 조회 (최신 데이터가 리스트 마지막에 위치)
+    @Query("SELECT m FROM Map m WHERE m.countryCode = :countryCode AND m.userId = :userId ORDER BY m.createdAt DESC")
     List<Map> findByCountryCodeAndUserIdOrderedByCreatedAt(String countryCode, Long userId);
 }
