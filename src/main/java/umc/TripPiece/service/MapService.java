@@ -7,17 +7,13 @@ import umc.TripPiece.converter.MapConverter;
 import umc.TripPiece.domain.City;
 import umc.TripPiece.domain.Country;
 import umc.TripPiece.domain.Map;
-import umc.TripPiece.domain.Travel;
 import umc.TripPiece.domain.User;
-import umc.TripPiece.domain.enums.Color;
-import umc.TripPiece.domain.jwt.JWTUtil;
 import umc.TripPiece.repository.*;
 import umc.TripPiece.security.SecurityUtils;
 import umc.TripPiece.web.dto.request.MapRequestDto;
 import umc.TripPiece.web.dto.response.MapResponseDto;
 import umc.TripPiece.web.dto.response.MapStatsResponseDto;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -34,8 +30,7 @@ public class MapService {
 
     public List<MapResponseDto> getUserMaps() {
         Long userId = SecurityUtils.getCurrentUserId();
-
-        return mapRepository.findByUserIdOrderedByCreatedAt(userId).stream()
+        return mapRepository.findByUserIdOrderedByUpdatedAt(userId).stream() // ✅ 메서드 이름 변경
                 .map(MapConverter::toMapResponseDto)
                 .collect(Collectors.toList());
     }
@@ -100,16 +95,16 @@ public class MapService {
     }
 
     @Transactional
-    public MapResponseDto updateMultipleMapColors(Long mapId, List<String> colorStrings) {
+    public MapResponseDto updateMultipleMapColors(Long mapId, List<String> colors) {
         Map map = mapRepository.findById(mapId)
                 .orElseThrow(() -> new IllegalArgumentException("Map not found with id: " + mapId));
 
-        map.setColors(colorStrings);
+        map.setColors(colors);
         return MapConverter.toMapResponseDto(mapRepository.save(map));
     }
 
     public List<MapResponseDto> getMapsByUserId(Long userId) {
-        return mapRepository.findByUserIdOrderedByCreatedAt(userId).stream()
+        return mapRepository.findByUserIdOrderedByUpdatedAt(userId).stream() // ✅ 메서드 이름 변경
                 .map(MapConverter::toMapResponseDto)
                 .collect(Collectors.toList());
     }
@@ -147,8 +142,8 @@ public class MapService {
     public MapStatsResponseDto getVisitedCountriesWithProfile() {
         Long userId = SecurityUtils.getCurrentUserId();
 
-        List<String> visitedCountries = getVisitedCountries(userId);
-        long visitedCountryCount = getVisitedCountryCount(userId);
+        List<String> visitedCountries = mapRepository.findDistinctCountryCodesByUserId(userId);
+        long visitedCountryCount = mapRepository.countDistinctCountryCodeByUserId(userId);
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + userId));
@@ -179,7 +174,7 @@ public class MapService {
     public List<MapResponseDto.getMarkerResponse> getUserMarkers() {
         Long userId = SecurityUtils.getCurrentUserId();
 
-        return mapRepository.findByUserIdOrderedByCreatedAt(userId).stream()
+        return mapRepository.findByUserIdOrderedByUpdatedAt(userId).stream() // ✅ 메서드 이름 변경
                 .map(map -> MapConverter.toMarkerResponseDto(
                         map,
                         "",
