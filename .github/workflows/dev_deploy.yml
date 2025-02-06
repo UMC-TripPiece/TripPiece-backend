@@ -39,13 +39,20 @@ jobs:
           json: ${{ secrets.FIREBASE_JSON }}
           dir: './src/main/resources/firebase/'
 
-      # Gradle 빌드 수행
+      # Gradle 빌드 수행 (Docker 이미지 빌드에 필요한 파일 생성)
       - name: Build with Gradle
         run: |
           chmod +x ./gradlew
           ./gradlew clean build -x test
 
-      # EC2에 jar 파일 전송 및 배포
+      # Docker 이미지 빌드 및 Docker Hub에 푸시
+      - name: Build and push Docker image
+        run: |
+          echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/trippiece:latest .
+          docker push ${{ secrets.DOCKER_USERNAME }}/trippiece:latest
+
+      # EC2에 Docker 이미지 배포
       - name: Deploy to EC2
         env:
           PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
@@ -54,42 +61,19 @@ jobs:
         run: |
           echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
 
-          # EC2에 애플리케이션 디렉터리 생성 (sudo 권한 사용)
+          # EC2에 Docker 설치 (필요한 경우)
           ssh -i private_key -o StrictHostKeyChecking=no ${USER}@${HOST} '
-            if [ ! -d "/opt/myapp" ]; then
-              sudo mkdir -p /opt/myapp && sudo chown ${USER}:${USER} /opt/myapp;
+            if ! command -v docker &> /dev/null; then
+              curl -fsSL https://get.docker.com | sh
+              sudo usermod -aG docker ${USER}  # 현재 사용자(ubuntu)를 docker 그룹에 추가
+              newgrp docker # 그룹 변경 적용 (로그아웃 후 재접속 필요할 수 있음)
             fi
           '
 
-          # JAR 파일 빌드 경로 확인
-          ls -l build/libs
-
-          # JAR 파일이 제대로 빌드되고 있는지 확인
-          JAR_FILE=$(ls build/libs/*SNAPSHOT.jar | head -n 1)
-          echo "Deploying $JAR_FILE"
-
-          # JAR 파일 전송
-          scp -i private_key -o StrictHostKeyChecking=no "$JAR_FILE" ${USER}@${HOST}:/opt/myapp/app.jar
-
-          # EC2에서 systemd 서비스 파일 생성
+          # EC2에서 Docker 이미지 pull 및 컨테이너 실행
           ssh -i private_key -o StrictHostKeyChecking=no ${USER}@${HOST} '
-            echo "[Unit]
-            Description=MyApp Service
-            After=network.target
-
-            [Service]
-            User=${USER}
-            ExecStart=/usr/bin/java -jar /opt/myapp/app.jar
-            Restart=always
-
-            [Install]
-            WantedBy=multi-user.target" | sudo tee /etc/systemd/system/myapp.service
-            sudo systemctl daemon-reload
-            sudo systemctl enable myapp
-          '
-
-          # 애플리케이션 배포
-          ssh -i private_key -o StrictHostKeyChecking=no ${USER}@${HOST} '
-            sudo systemctl stop myapp || true
-            sudo systemctl start myapp
+          sudo docker pull ${{ secrets.DOCKER_USERNAME }}/trippiece:latest
+          sudo docker stop trippiece-container || true  # 기존 컨테이너 정지 (존재하지 않으면 무시)
+          sudo docker rm trippiece-container || true    # 기존 컨테이너 삭제 (존재하지 않으면 무시)
+          sudo docker run -d -p 8080:8080 --name trippiece-container ${{ secrets.DOCKER_USERNAME }}/trippiece:latest
           '
