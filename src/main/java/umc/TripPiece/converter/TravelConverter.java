@@ -128,4 +128,14 @@ public class TravelConverter {
                 .build();
     }
 
+    public static TravelResponseDto.UpdateResponseDto toUpdateResponseDto(Travel travel) {
+        return TravelResponseDto.UpdateResponseDto.builder()
+                .title(travel.getTitle())
+                .pictureUrl(travel.getThumbnail())
+                .startDate(travel.getStartDate().toLocalDate())
+                .endDate(travel.getEndDate().toLocalDate())
+                .build();
+
+    }
+
 }
