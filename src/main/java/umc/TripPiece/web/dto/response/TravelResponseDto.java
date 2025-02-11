@@ -116,4 +116,15 @@ public class TravelResponseDto {
         Boolean travel_thumbnail;
         Integer thumbnail_index;
     }
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class UpdateResponseDto {
+        private String pictureUrl;
+        private String title;
+        private LocalDate startDate;
+        private LocalDate endDate;
+    }
 }

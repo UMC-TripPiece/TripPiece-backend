@@ -19,6 +19,7 @@ import umc.TripPiece.web.dto.request.TravelRequestDto;
 import umc.TripPiece.web.dto.response.TravelResponseDto;
 
 import java.util.List;
+import umc.TripPiece.web.dto.response.TravelResponseDto.UpdateResponseDto;
 
 @Tag(name = "Travel", description = "여행기 관련 API")
 @RestController
@@ -170,6 +171,17 @@ public class TravelController {
             @PathVariable("travelId") Long travelId,
             @RequestParam(name = "pictureIdList") List<Long> pictureIdList) {
         List<TravelResponseDto.UpdatablePictureDto> response = travelService.updateThumbnail(travelId, pictureIdList);
+        return ApiResponse.onSuccess(response);
+    }
+
+    @PatchMapping(value = "/mytravels/{travelId}", consumes = "multipart/form-data")
+    @Operation(summary = "여행기 편집(썸네일, 기간, 제목) API", description = "여행기의 썸네일, 제목, 기간을 수정")
+    public ApiResponse<TravelResponseDto.UpdateResponseDto> updateTravel(
+            @ExistEntity(entityType = umc.TripPiece.domain.Travel.class)
+            @PathVariable("travelId") Long travelId,
+            @Valid @ModelAttribute TravelRequestDto.UpdateRequestDto request
+    ) {
+        TravelResponseDto.UpdateResponseDto response = travelService.updateTravel(travelId, request);
         return ApiResponse.onSuccess(response);
     }
 

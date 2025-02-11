@@ -1,5 +1,6 @@
 package umc.TripPiece.web.dto.request;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import java.util.List;
@@ -9,6 +10,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 public class TravelRequestDto {
 
@@ -38,6 +41,18 @@ public class TravelRequestDto {
 
         @NotBlank
         String description;
+    }
+
+    @Getter
+    @Setter
+    public static class UpdateRequestDto {
+        private MultipartFile thumbnail;
+        @Size(max = 15, message = "제목은 15자 이내")
+        private String title;
+        @Schema(description = "yyyy-mm-dd")
+        private LocalDate startDate;
+        @Schema(description = "yyyy-mm-dd")
+        private LocalDate endDate;
     }
 
 }

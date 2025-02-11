@@ -35,9 +35,12 @@ public class Travel extends BaseEntity {
     @JoinColumn(name = "city_id")
     private City city;
 
+    @Setter
     private String title;
     private String description;
+    @Setter
     private LocalDateTime startDate;
+    @Setter
     private LocalDateTime endDate;
     private boolean travelOpen;
     private Long likeCount;

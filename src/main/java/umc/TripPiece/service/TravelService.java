@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import umc.TripPiece.apiPayload.code.status.ErrorStatus;
+import umc.TripPiece.apiPayload.exception.GeneralException;
 import umc.TripPiece.apiPayload.exception.handler.BadRequestHandler;
 import umc.TripPiece.apiPayload.exception.handler.NotFoundHandler;
 import umc.TripPiece.aws.s3.AmazonS3Manager;
@@ -46,6 +47,7 @@ import umc.TripPiece.security.SecurityUtils;
 import umc.TripPiece.web.dto.request.TravelRequestDto;
 import umc.TripPiece.web.dto.request.TravelRequestDto.EmojiDto;
 import umc.TripPiece.web.dto.request.TravelRequestDto.MemoDto;
+import umc.TripPiece.web.dto.request.TravelRequestDto.UpdateRequestDto;
 import umc.TripPiece.web.dto.response.TravelResponseDto;
 
 @Service
@@ -520,6 +522,47 @@ public class TravelService {
                 .filter(Objects::nonNull)
                 .map(TravelConverter::toUpdatablePictureDto)
                 .toList();
+    }
+
+    @Transactional
+    public TravelResponseDto.UpdateResponseDto updateTravel(Long travelId, TravelRequestDto.UpdateRequestDto request) {
+        Travel travel = travelRepository.findById(travelId).get();
+        Long userId = SecurityUtils.getCurrentUserId();
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundHandler(ErrorStatus.NOT_FOUND_USER));
+
+        if (!travel.getUser().equals(user)) {
+            throw new BadRequestHandler(ErrorStatus.INVALID_TRAVEL_USER);
+        }
+
+        if (request.getThumbnail() != null) {
+            String originThumbnail = travel.getThumbnail();
+
+            if (originThumbnail != null) {
+                s3Manager.deleteFile(originThumbnail);
+            }
+
+            // UUID 생성
+            String uuid = UUID.randomUUID().toString();
+
+            // 동영상 저장
+            String newThumbnail = s3Manager.uploadFile("thumbnails/" + uuid, request.getThumbnail(), Category.PICTURE);
+            travel.setThumbnail(newThumbnail);
+        }
+
+        if (request.getStartDate() != null) {
+            travel.setStartDate(request.getStartDate().atStartOfDay());
+        }
+
+        if (request.getEndDate() != null) {
+            travel.setEndDate(request.getEndDate().atStartOfDay());
+        }
+
+        if (request.getTitle() != null) {
+            travel.setTitle(request.getTitle());
+        }
+
+        return TravelConverter.toUpdateResponseDto(travel);
     }
 
     private void initPicturesThumbnail(Travel travel) {
