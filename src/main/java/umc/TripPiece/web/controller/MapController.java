@@ -106,7 +106,7 @@ public class MapController {
 
     @GetMapping("/search")
     @Operation(summary = "도시, 국가 검색 API", description = "도시, 국가 검색")
-    public ApiResponse<List<MapResponseDto.searchDto>> searchCities(@RequestParam String keyword) {
+    public ApiResponse<List<MapResponseDto.searchDto>> searchCities(@RequestParam(name = "keyword") String keyword) {
         List<MapResponseDto.searchDto> result = mapService.searchCitiesCountry(keyword);
         if (result.isEmpty()) {
             throw new NotFoundHandler(ErrorStatus.NOT_FOUND_CITY_COUNTRY);
