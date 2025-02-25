@@ -4,6 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import umc.TripPiece.domain.City;
+import umc.TripPiece.domain.Country;
 
 import java.math.BigInteger;
 import java.util.List;
@@ -22,7 +23,11 @@ public interface CityRepository extends JpaRepository<City, Long> {
     @Query("SELECT DISTINCT c FROM City c JOIN Travel t ON t.city.id = c.id WHERE t.user.id = :userId")
     List<City> findCitiesByUserId(Long userId);
 
-    //도시별 여행기 수 내림차순
+    // 도시별 여행기 수 내림차순
     @Query("SELECT c FROM City c ORDER BY c.logCount DESC ")
     List<City> findAllByOrderByLogCountDesc();
+
+    // 귝가 기반 도시 검색
+    @Query("SELECT c FROM City c WHERE c.country = :country")
+    List<City> findByCountry(@Param("country") Country country);
 }

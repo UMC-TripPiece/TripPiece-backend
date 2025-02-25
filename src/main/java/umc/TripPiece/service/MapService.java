@@ -14,6 +14,7 @@ import umc.TripPiece.web.dto.request.MapRequestDto;
 import umc.TripPiece.web.dto.response.MapResponseDto;
 import umc.TripPiece.web.dto.response.MapStatsResponseDto;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -166,9 +167,27 @@ public class MapService {
         List<City> cities = cityRepository.findByNameIgnoreCase(keyword);
         List<Country> countries = countryRepository.findByNameIgnoreCase(keyword);
 
-        return cities.stream()
-                .map(MapConverter::toSearchDto)
-                .collect(Collectors.toList());
+        List<MapResponseDto.searchDto> searchResults = new ArrayList<>();
+
+        // 도시 검색 결과
+        searchResults.addAll(
+                cities.stream()
+                        .map(MapConverter::toSearchDto)
+                        .collect(Collectors.toList())
+        );
+
+        // 국가 검색 결과
+        for (Country country : countries) {
+            // 해당 국가의 모든 도시 추가
+            List<City> countryCities = cityRepository.findByCountry(country);
+            searchResults.addAll(
+                    countryCities.stream()
+                            .map(MapConverter::toSearchDto)
+                            .collect(Collectors.toList())
+            );
+        }
+
+        return searchResults;
     }
 
     public List<MapResponseDto.getMarkerResponse> getUserMarkers() {
