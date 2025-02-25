@@ -74,7 +74,6 @@ public enum ErrorStatus implements BaseErrorCode {
 
     // 여행기 관련 오류
     INVALID_TRAVEL_PARARM(HttpStatus.BAD_REQUEST, "TRAVEL400", "유효하지 않은 파라미터입니다."),
-    TRAVEL_INPROGRESS(HttpStatus.BAD_REQUEST, "TRAVEL400", "현재 진행 중인 여행기가 있습니다."),
     MISSING_TRAVEL_THUMBNAIL(HttpStatus.BAD_REQUEST,"TRAVEL400","썸네일이 필요합니다."),
     INVALID_TRAVEL_DATE(HttpStatus.BAD_REQUEST, "TRAVEL400", "여행 기간이 유효하지 않습니다."),
     INVALID_TRAVEL_TITLE(HttpStatus.BAD_REQUEST, "TRAVEL400", "여행기 제목이 유효하지 않습니다."),
