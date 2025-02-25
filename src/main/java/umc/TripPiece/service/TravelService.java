@@ -349,13 +349,6 @@ public class TravelService {
         String uuid = UUID.randomUUID().toString();
         String thumbnailUrl = s3Manager.uploadFile("thumbnails/" + uuid, thumbnail, Category.PICTURE);
 
-        Travel ongoingTravel = travelRepository.findByStatusAndUserId(TravelStatus.ONGOING, userId)
-                .orElse(null);
-
-        if (ongoingTravel != null) {
-            throw new BadRequestHandler(ErrorStatus.TRAVEL_INPROGRESS);
-        }
-
         Travel travel = TravelConverter.toTravel(request, city);
         travel.setUser(user);
         travel.setThumbnail(thumbnailUrl);
