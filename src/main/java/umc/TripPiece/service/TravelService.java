@@ -424,7 +424,13 @@ public class TravelService {
 
         LocalDateTime startDate = travel.getStartDate();
         LocalDateTime today = LocalDateTime.now();
-        Long dayCount = ChronoUnit.DAYS.between(startDate, today);
+        Long dayCount;
+
+        if (today.isBefore(startDate)) {
+            dayCount = 0L;
+        } else {
+            dayCount = ChronoUnit.DAYS.between(startDate, today);
+        }
 
         return TravelConverter.toOngoingTravelResultDto(travel, nickname, profileImg, countryName, dayCount);
     }
