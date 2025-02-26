@@ -96,7 +96,6 @@ public class UserConverter {
                 .gender(gender)
                 .birth(request.getBirth())
                 .country(request.getCountry())
-                .gpsConsent(true) // 고정값 설정
                 .method(UserMethod.GENERAL) // 고정값 설정
                 .isPublic(true) // 고정값 설정
                 .build();
@@ -114,7 +113,6 @@ public class UserConverter {
                 .gender(gender)
                 .birth(request.getBirth())
                 .country(request.getCountry())
-                .gpsConsent(true) // 고정값 설정
                 .method(method) // KAKAO 또는 APPLE
                 .providerId(request.getProviderId()) // 카카오 또는 애플 providerId
                 .isPublic(true) // 고정값 설정

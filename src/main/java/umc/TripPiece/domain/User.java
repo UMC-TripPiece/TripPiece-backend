@@ -60,10 +60,6 @@ public class User extends BaseEntity {
     private String country;
 
     @Setter
-    @Column(nullable = false)
-    private Boolean gpsConsent;
-
-    @Setter
     @Column(nullable = false, length = 10)
     @Enumerated(EnumType.STRING)
     private UserMethod method;
