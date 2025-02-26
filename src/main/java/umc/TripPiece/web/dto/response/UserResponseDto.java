@@ -16,7 +16,6 @@ public class UserResponseDto {
     @AllArgsConstructor
     public static class SignUpResultDto {
         Long id;
-        String name;
         String email;
         String nickname;
         Gender gender;
@@ -56,7 +55,6 @@ public class UserResponseDto {
     public static class SignUpSocialResultDto {
         private Long id;
         private Long providerId;
-        private String name;
         private String email;
         private String nickname;
         private Gender gender;

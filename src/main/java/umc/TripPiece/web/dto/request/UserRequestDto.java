@@ -14,11 +14,6 @@ public class UserRequestDto {
     @Getter
     @NoArgsConstructor
     public static class SignUpDto {
-
-        @NotBlank(message = "이름은 필수 입력 항목입니다.")
-        @Size(min = 2, max = 10, message = "이름은 2자에서 10자 사이여야 합니다.")
-        private String name;
-
         @NotBlank(message = "이메일은 필수 입력 항목입니다.")
         @Email
         @Pattern(
@@ -39,21 +34,17 @@ public class UserRequestDto {
         @Size(min = 2, max = 10, message = "닉네임은 2자에서 10자 사이여야 합니다.")
         private String nickname;
 
-        @NotNull(message = "성별은 필수 입력 항목입니다.")
         private Gender gender;
 
-
         @ValidBirth
-        @NotBlank(message = "생일은 필수 입력 항목입니다.")
         @Pattern(
-                regexp = RegexConstants.BIRTH_REGEX,
+                regexp = "^$|" + RegexConstants.BIRTH_REGEX,
                 message = "생일은 유효한 날짜여야 하며, YYYY/MM/DD 형식이어야 합니다."
         )
         private String birth;
 
-        @NotBlank(message = "국적은 필수 입력 항목입니다.")
         @Pattern(
-                regexp = RegexConstants.COUNTRY_REGEX,
+                regexp = "^$|" + RegexConstants.COUNTRY_REGEX,
                 message = "국적은 현재 대한민국만 이용 가능합니다."
         )
         private String country;
@@ -82,10 +73,6 @@ public class UserRequestDto {
         @NotNull(message = "유저 ID는 필수 입력 항목입니다.")
         private Long providerId;
 
-        @NotBlank(message = "이름은 필수 입력 항목입니다.")
-        @Size(min = 2, max = 10, message = "이름은 2자에서 10자 사이여야 합니다.")
-        private String name;
-
         @NotBlank(message = "이메일은 필수 입력 항목입니다.")
         @Pattern(
                 regexp = RegexConstants.EMAIL_REGEX,
@@ -98,20 +85,17 @@ public class UserRequestDto {
         @Size(min = 2, max = 10, message = "닉네임은 2자에서 10자 사이여야 합니다.")
         private String nickname;
 
-        @NotNull(message = "성별은 필수 입력 항목입니다.")
         private Gender gender;
 
         @ValidBirth
-        @NotBlank(message = "생일은 필수 입력 항목입니다.")
         @Pattern(
-                regexp = RegexConstants.BIRTH_REGEX,
+                regexp = "^$|" + RegexConstants.BIRTH_REGEX,
                 message = "생일은 유효한 날짜여야 하며, YYYY/MM/DD 형식이어야 합니다."
         )
         private String birth;
 
-        @NotBlank(message = "국적은 필수 입력 항목입니다.")
         @Pattern(
-                regexp = RegexConstants.COUNTRY_REGEX,
+                regexp = "^$|" + RegexConstants.COUNTRY_REGEX,
                 message = "국적은 현재 대한민국만 이용 가능합니다."
         )
         private String country;
