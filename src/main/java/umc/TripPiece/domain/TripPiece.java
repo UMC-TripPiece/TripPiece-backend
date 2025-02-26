@@ -31,7 +31,7 @@ public class TripPiece extends BaseEntity {
     private Category category;
 
     @Setter
-    @Column(nullable = false)
+    @Column
     private String description;
 
     @Column

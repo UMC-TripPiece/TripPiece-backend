@@ -163,7 +163,7 @@ public class TravelService {
                 .orElseThrow(() -> new NotFoundHandler(ErrorStatus.NOT_FOUND_TRAVEL));
 
         // 메모 검증
-        if (request.getDescription().length() > 100) {
+        if (request != null && request.getDescription().length() > 100) {
             throw new BadRequestHandler(ErrorStatus.TEXT_LENGTH_100_ERROR);
         }
 
@@ -213,7 +213,7 @@ public class TravelService {
                 .orElseThrow(() -> new NotFoundHandler(ErrorStatus.NOT_FOUND_TRAVEL));
 
         // 메모 검증
-        if (request.getDescription().length() > 100) {
+        if (request != null && request.getDescription().length() > 100) {
             throw new BadRequestHandler(ErrorStatus.TEXT_LENGTH_100_ERROR);
         }
 
@@ -254,7 +254,7 @@ public class TravelService {
                 .orElseThrow(() -> new NotFoundHandler(ErrorStatus.NOT_FOUND_TRAVEL));
 
         // 메모 검증
-        if (request.getDescription().length() > 100) {
+        if (request != null && request.getDescription().length() > 100) {
             throw new BadRequestHandler(ErrorStatus.TEXT_LENGTH_100_ERROR);
         }
 
@@ -295,7 +295,7 @@ public class TravelService {
                 .orElseThrow(() -> new NotFoundHandler(ErrorStatus.NOT_FOUND_TRAVEL));
 
         // 메모 검증
-        if (request.getDescription().length() > 100) {
+        if (request != null && request.getDescription().length() > 100) {
             throw new BadRequestHandler(ErrorStatus.TEXT_LENGTH_100_ERROR);
         }
 
