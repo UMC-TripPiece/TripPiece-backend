@@ -17,7 +17,7 @@ public class TravelConverter {
 
     public static TripPiece toTripPieceMemo(TravelRequestDto.MemoDto request, User user) {
         return TripPiece.builder()
-                .description(request.getDescription())
+                .description(request != null ? request.getDescription() : null)
                 .user(user)
                 .build();
     }

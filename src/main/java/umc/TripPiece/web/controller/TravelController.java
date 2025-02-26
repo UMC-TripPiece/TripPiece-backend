@@ -79,7 +79,7 @@ public class TravelController {
     @PostMapping(value = "/mytravels/picture/{travelId}", consumes = "multipart/form-data")
     @Operation(summary = "사진 기록 API", description = "특정 여행기에서의 여행조각 추가")
     public ApiResponse<TravelResponseDto.CreateTripPieceResultDto> createTripPiecePicture(
-            @RequestPart("memo") TravelRequestDto.MemoDto request,
+            @Valid @RequestPart(value = "memo", required = false) TravelRequestDto.MemoDto request,
             @ExistEntity(entityType = umc.TripPiece.domain.Travel.class)
             @PathVariable("travelId") Long travelId,
             @RequestPart("photos") List<MultipartFile> photos){
@@ -92,7 +92,7 @@ public class TravelController {
     @PostMapping(value = "/mytravels/selfie/{travelId}", consumes = "multipart/form-data")
     @Operation(summary = "셀카 기록 API", description = "특정 여행기에서의 여행조각 추가")
     public ApiResponse<TravelResponseDto.CreateTripPieceResultDto> createTripPieceSelfie(
-            @Valid @RequestPart("memo") TravelRequestDto.MemoDto request,
+            @Valid @RequestPart(value = "memo", required = false) TravelRequestDto.MemoDto request,
             @ExistEntity(entityType = umc.TripPiece.domain.Travel.class)
             @PathVariable("travelId") Long travelId,
             @RequestPart("photo") MultipartFile photo){
@@ -104,7 +104,7 @@ public class TravelController {
     @PostMapping(value = "/mytravels/video/{travelId}", consumes = "multipart/form-data")
     @Operation(summary = "비디오 기록 API", description = "특정 여행기에서의 여행조각 추가")
     public ApiResponse<TravelResponseDto.CreateTripPieceResultDto> createTripPieceVideo(
-            @Valid @RequestPart("memo") TravelRequestDto.MemoDto request,
+            @Valid @RequestPart(value = "memo", required = false) TravelRequestDto.MemoDto request,
             @ExistEntity(entityType = umc.TripPiece.domain.Travel.class)
             @PathVariable("travelId") Long travelId,
             @RequestPart("video") MultipartFile video){
@@ -116,7 +116,7 @@ public class TravelController {
     @PostMapping(value = "/mytravels/where/{travelId}", consumes = "multipart/form-data")
     @Operation(summary = "'지금 어디에 있나요?' 카테고리 기록 API", description = "특정 여행기에서의 여행조각 추가")
     public ApiResponse<TravelResponseDto.CreateTripPieceResultDto> createTripPieceWhere(
-            @Valid @RequestPart("memo") TravelRequestDto.MemoDto request,
+            @Valid @RequestPart(value = "memo", required = false) TravelRequestDto.MemoDto request,
             @ExistEntity(entityType = umc.TripPiece.domain.Travel.class)
             @PathVariable("travelId") Long travelId,
             @RequestPart("video") MultipartFile video){
