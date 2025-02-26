@@ -29,8 +29,6 @@ public class TravelRequestDto {
 
     @Getter
     public static class MemoDto {
-
-        @NotBlank
         String description;
     }
 
