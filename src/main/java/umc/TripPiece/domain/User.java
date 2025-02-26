@@ -27,10 +27,6 @@ public class User extends BaseEntity {
     private Long id;
 
     @Setter
-    @Column(length = 20)
-    private String name;
-
-    @Setter
     @Column(nullable = false)
     private String email;
 
@@ -43,12 +39,12 @@ public class User extends BaseEntity {
     private String nickname;
 
     @Setter
-    @Column(nullable = false, length = 10)
+    @Column(length = 10)
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
     @Setter
-    @Column(nullable = false, length = 20)
+    @Column(length = 20)
     private String birth;
 
     @Setter
@@ -56,7 +52,7 @@ public class User extends BaseEntity {
     private String profileImg;
 
     @Setter
-    @Column(nullable = false, length = 30)
+    @Column(length = 30)
     private String country;
 
     @Setter

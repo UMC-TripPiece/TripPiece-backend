@@ -14,7 +14,7 @@ public class FutureDateValidator implements ConstraintValidator<ValidBirth, Stri
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
         if (value == null || value.isBlank()) {
-            return false; // 생일 값이 비어있는 경우
+            return true; // 생일 값이 비어있는 경우 (null 허용)
         }
 
         try {

@@ -14,7 +14,6 @@ public class UserConverter {
     public static UserResponseDto.SignUpResultDto toSignUpResultDto(User user){
         return UserResponseDto.SignUpResultDto.builder()
                 .id(user.getId())
-                .name(user.getName())
                 .email(user.getEmail())
                 .nickname(user.getNickname())
                 .gender(user.getGender())
@@ -29,7 +28,6 @@ public class UserConverter {
         return UserResponseDto.SignUpSocialResultDto.builder()
                 .id(user.getId())
                 .providerId(user.getProviderId())
-                .name(user.getName())
                 .email(user.getEmail())
                 .nickname(user.getNickname())
                 .gender(user.getGender())
@@ -89,7 +87,6 @@ public class UserConverter {
         Gender gender = request.getGender();
 
         return User.builder()
-                .name(request.getName())
                 .email(request.getEmail())
                 .password(hashedPassword)
                 .nickname(request.getNickname())
@@ -106,7 +103,6 @@ public class UserConverter {
         Gender gender = request.getGender();
 
         return User.builder()
-                .name("")
                 .email(request.getEmail())
                 .password("")
                 .nickname(request.getNickname())

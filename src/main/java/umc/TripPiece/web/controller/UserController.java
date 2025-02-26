@@ -6,10 +6,6 @@ import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.validation.FieldError;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import umc.TripPiece.apiPayload.ApiResponse;
@@ -22,13 +18,9 @@ import umc.TripPiece.converter.UserConverter;
 import umc.TripPiece.domain.User;
 import umc.TripPiece.domain.enums.UserMethod;
 import umc.TripPiece.domain.jwt.JWTUtil;
-import umc.TripPiece.security.SecurityUtils;
 import umc.TripPiece.service.UserService;
 import umc.TripPiece.web.dto.request.UserRequestDto;
 import umc.TripPiece.web.dto.response.UserResponseDto;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @Tag(name = "User", description = "유저 관련 API")
 @RestController
